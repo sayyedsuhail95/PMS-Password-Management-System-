@@ -6,12 +6,13 @@ from tkinter import messagebox
 import os
 import sqlite3
 
-#This block is used to login into the system
+
+# This block is used to login into the system
 def login():
     user = username.get()
     swd = pwdd.get()
 
-    if user == "Admin" and swd == "Shoaib@123":
+    if user == "Admin" and swd == "Admin@123":
         Tr = Toplevel(loginscreen)
         Tr.title("Login")
         Tr.geometry("1280x720")
@@ -49,7 +50,7 @@ def login():
             conn = sqlite3.connect("passmanager.db")
             cursor = conn.cursor()
 
-            # Insert Into Table
+            # We Insert the data into the Table
             if app_name.get() != "" and url.get() != "" and email_id.get() != "" and password.get() != "":
                 cursor.execute("INSERT INTO manager VALUES (:app_name, :url, :email_id, :password)",
                                {
@@ -95,9 +96,10 @@ def login():
                     record[2]) + " " + str(
                     record[3]) + "\n"
             query_label['text'] = p_records
-            conn.commit()
+            conn.commit()  # commiting and closing
             conn.close()
 
+        # This function is used to delete the existing records
         def delete():
             conn = sqlite3.connect("passmanager.db")
             cursor = conn.cursor()
@@ -199,14 +201,22 @@ def login():
             query_btn.configure(text="Show Records", command=query)
 
         def Password_generator():
+            bb = Tk()
+            bb.geometry("400x400")
+            bb.title("Password Generator")
+            
+
+
+            bb.mainloop()
+
+
             le = int(input("Enter the length of password"))
             ll = string.ascii_letters
-            dd= string.ascii_uppercase
+            dd = string.ascii_uppercase
             ee = string.ascii_lowercase
-            summation = random.sample(ll,dd,ee)
+            summation = random.sample(ll, dd, ee)
             generator = ".join(summation)"
             print(generator)
-
 
         # Creation of Text Boxes
         app_name = Entry(sampass, width=30)
@@ -222,7 +232,7 @@ def login():
         update_id = Entry(sampass, width=20)
         update_id.grid(row=7, column=1, padx=20)
 
-        # Create Text Box Labels
+        # We are creating Text Labels Box
         application_name_label = Label(sampass, text="Name of the Application being used:")
         application_name_label.grid(row=0, column=0)
         Link_label = Label(sampass, text="Link of the Application:")
@@ -305,9 +315,54 @@ def mainloginscree():
         toenterusername.delete(0, END)
         toenterpassword.delete(0, END)
 
+    def register():
+        fv = Tk()
+        fv.geometry("500x500")
+        def Database():
+           global conn, cursor
+           conn = sqlite3.connect("db_member.db")
+           cursor = conn.cursor()
+           cursor.execute(
+               "CREATE TABLE IF NOT EXISTS `member` (mem_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, username TEXT, password TEXT, firstname TEXT, lastname TEXT)")
+
+        def registerf():
+            mailiduser = StringVar()
+            pwd = StringVar()
+            Userfirstname = StringVar()
+            userlastname = StringVar()
+
+        global RegisterFrame, lbl_result2
+        RegisterFrame = Frame(fv)
+        RegisterFrame.grid(row=0, padx=30)
+        lbl_username = Label(RegisterFrame, text="Username:", font=('arial', 18), bd=18)
+        lbl_username.grid(row=1)
+        lbl_password = Label(RegisterFrame, text="Password:", font=('arial', 18), bd=18)
+        lbl_password.grid(row=2)
+        lbl_firstname = Label(RegisterFrame, text="Firstname:", font=('arial', 18), bd=18)
+        lbl_firstname.grid(row=3)
+        lbl_lastname = Label(RegisterFrame, text="Lastname:", font=('arial', 18), bd=18)
+        lbl_lastname.grid(row=4)
+        lbl_result2 = Label(RegisterFrame, text="", font=('arial', 18))
+        lbl_result2.grid(row=5, columnspan=2)
+        username = Entry(RegisterFrame, font=('arial', 20), width=15)
+        username.grid(row=1, column=1)
+        password = Entry(RegisterFrame, font=('arial', 20), width=15, show="*")
+        password.grid(row=2, column=1)
+        firstname = Entry(RegisterFrame, font=('arial', 20), width=15)
+        firstname.grid(row=3, column=1)
+        lastname = Entry(RegisterFrame, font=('arial', 20), width=15)
+        lastname.grid(row=4, column=1)
+
+
+        btn_login = Button(RegisterFrame, text="Register", font=('arial', 18), width=35, command=registerf)
+        btn_login.grid(row=6, columnspan=2, pady=20)
+
+        fv.mainloop()
+
     Button(mframe, text="login", height="2", width=10, command=login).place(x=100, y=250)
     Button(mframe, text="Reset", height="2", width=10, command=reset).place(x=300, y=250)
-    Button(mframe, text="exit", height="2", width=10, ).place(x=500, y=250)
+    Button(mframe, text="exit", height="2", width=7, ).place(x=500, y=250)
+    Button(mframe, text="register", height="2", width=10, command=register).place(x=600, y=250)
 
     loginscreen.mainloop()
 
